@@ -1,0 +1,16 @@
+.btn {
+    background-color: green;
+    margin-top: 15px;
+    padding: 5px;
+}
+.col-xs-12 {
+    padding-top: 15px;
+    /* margin-top: 10px; */
+}
+.row {
+    margin-right: 1px;
+    padding: 5px;
+}
+.img-responsive {
+    max-height: 50px;
+}

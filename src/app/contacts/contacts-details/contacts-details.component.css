@@ -1,0 +1,9 @@
+.row {
+    padding: 5px;
+}
+.img-responsive {
+    max-height: 100px;
+}
+.btn-toolbar {
+    margin-top: 70px;
+}
