@@ -9,6 +9,7 @@ export class AppComponent {
   title = 'cms';
 
   selectedFeature = 'documents';
+  //test
 
   switchView(selectedFeature: string) {
     this.selectedFeature = selectedFeature;
