@@ -32,6 +32,7 @@ id: string;
         this.document = this.documentService.getDocument(this.id);
       }
     );
+    this.nativeWindow = this.windowRefService.getNativeWindow();
   }
   // onAddDocument() {
   //   this.documentService.addDocument(this.document.);
