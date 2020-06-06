@@ -12,11 +12,11 @@ selectedDocument: Document;
   constructor(private documentService: DocumentService) { }
 
   ngOnInit() {
-    this.documentService.documentSelectedEvent.subscribe(
-      (document: Document) => {
-        this.selectedDocument = document;
-      }
-    );
+    // this.documentService.documentSelectedEvent.subscribe(
+    //   (document: Document) => {
+    //     this.selectedDocument = document;
+    //   }
+    // );
   }
 
 }
