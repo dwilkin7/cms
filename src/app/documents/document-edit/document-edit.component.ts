@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { DocumentService } from '../document.service';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { NgForm } from '@angular/forms';
+
+//added document import; don't know if it is needed.
+import { Document } from '../document.model';
 
 @Component({
   selector: 'cms-document-edit',
@@ -7,9 +13,75 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DocumentEditComponent implements OnInit {
 
-  constructor() { }
+originalDocument: Document;
+document: Document;
+editMode: boolean = false;
 
-  ngOnInit(): void {
+documents: Document[] = [];
+  id: string;
+
+  constructor(private documentService: DocumentService,
+              private router: Router,
+              private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.route.params.subscribe ((params: Params) => {
+
+        this.id = params.id;
+
+    if (this.id === null || this.id === undefined) {
+        this.editMode = false;
+      return;
+    }
+
+    this.originalDocument = this.documentService.getDocument(this.id);
+
+     if (this.originalDocument === null){
+         return;
+    }
+        this.editMode = true;
+        this.document = JSON.parse(JSON.stringify(this.originalDocument));
+        console.log(JSON.parse(JSON.stringify(this.originalDocument)));
+  })
+}
+
+  onSubmit(form: NgForm) {
+    // const value = form.value;
+    // const newDocument = new Document(value.id, value.name, value.description, value.url, value.children);
+    let newDocument = new Document(this.id, form.value['name'], form.value['description'], form.value['url'], null);
+    if (this.editMode){
+      this.documentService.updateDocument(this.originalDocument, newDocument);
+    }
+    else {
+      this.documentService.addDocument(newDocument);
+    }
+    this.router.navigate(['/documents']);
+    console.log(form);
   }
 
+onCancel() {
+  this.router.navigateByUrl('/documents');
+}
+  // getDocument(id: string): Document {
+  //   for (const document of this.documents){
+  //     if (document.id === id){
+  //       return document;
+  //     }
+  //   }
+  //   return null;
+  // }
+
+
+
+// )
+// ngOnInit() {
+//   this.route.params
+//   .subscribe(
+//     (params: Params) => {
+//       this.id = params['id'];
+//       this.document = this.documentService.getDocument(this.id);
+//     }
+//   );
+//   this.nativeWindow = this.windowRefService.getNativeWindow();
+// }
 }
