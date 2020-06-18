@@ -1,13 +1,23 @@
     <div class="row">
-      <div class="panel panel-default">
-        <div class="col-xs-12 panel-heading">
-          <div class="col-xs-9">
-            <h2 class="heading">Contacts</h2>
+      <div class="panel-heading">
+        <div class="row">
+          <span class="title pad-left-right">Contacts</span>
+        </div>
+        <div class="row">
+          <div class="input-group pull-left pad-left-right col-xs-7">
+            
+            <input #searchBox
+            type="text"
+            (keyup)="onKeyPress(searchBox.value)"
+            class="form-control"
+            placeholder="Enter search value">
+    
+            <div class="glyphicon glyphicon glyphicon-search input-group-addon" (click)="onKeyPress(searchBox.value)"></div>
           </div>
-          <div class="col-xs-3">
-            <!-- See contacts-list-component.css for green button styling -->
-            <a class="btn btn-success" [routerLink]="['new']">New Contact</a> 
+          <div class="pull-right pad-left-right">
+            <a class="btn btn-success" [routerLink]="['new']">New Contact</a>
           </div>
+        </div>
       </div>
       <div class="panel-body">
         <div class="row">
@@ -16,7 +26,7 @@
             
 
             <cms-contact-item
-            *ngFor="let contact of contacts"
+            *ngFor="let contact of contacts | contactsFilter:term"
             [contact]="contact"
             dnd-draggable 
             [dragEnabled]="true" 

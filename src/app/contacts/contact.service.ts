@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Contact } from './contact.model';
 import { MOCKCONTACTS } from './MOCKCONTACTS';
 import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +14,28 @@ contactListChangedEvent = new Subject<Contact[]>();
 maxContactId: number;
 
 
-  constructor() { 
-    this.contacts = MOCKCONTACTS;
-    this.maxContactId = this.getMaxId();
+  constructor(private http: HttpClient) { 
+    // this.contacts = MOCKCONTACTS;
+    // this.maxContactId = this.getMaxId();
   }
   
   //getContacts
-  getContacts(): Contact[] {
-    return this.contacts.slice();
+  // getContacts(): Contact[] {
+  //   return this.contacts.slice();
+  // }
+  getContacts() {
+    this.http.get('https://cms-wdd430.firebaseio.com/contacts.json')
+    .subscribe(
+      (contacts: Contact[]) => {
+        this.contacts = contacts;
+        this.maxContactId = this.getMaxId();
+        this.contacts.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+        this.contactListChangedEvent.next(this.contacts.slice());
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
   }
   
   //getMaxId
@@ -46,8 +61,10 @@ maxContactId: number;
     }
     newContact.id = originalContact.id;
     this.contacts[pos] = newContact;
-    const contactsListClone = this.contacts.slice();
-    this.contactListChangedEvent.next(contactsListClone);
+
+    this.storeContacts();
+    // const contactsListClone = this.contacts.slice();
+    // this.contactListChangedEvent.next(contactsListClone);
   }
 
   //getContact
@@ -68,8 +85,10 @@ addContact(newContact: Contact){
   newContact.id = this.maxContactId.toString();
   this.contacts.push(newContact);
 
-  const contactsListClone = this.contacts.slice();
-  this.contactListChangedEvent.next(contactsListClone);
+  this.storeContacts();
+
+  // const contactsListClone = this.contacts.slice();
+  // this.contactListChangedEvent.next(contactsListClone);
 }
 
 //deleteContact
@@ -84,6 +103,33 @@ addContact(newContact: Contact){
       return;
     }
     this.contacts.splice(pos, 1);
-    this.contactListChangedEvent.next(this.contacts.slice());
+    this.storeContacts();
+    // this.contactListChangedEvent.next(this.contacts.slice());
   }
+
+  //store contacts
+  storeContacts() {
+    let contacts = JSON.stringify(this.contacts);
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    this.http.put('https://cms-wdd430.firebaseio.com/contacts.json', contacts, { headers: headers })
+    .subscribe(
+      () => {
+        this.contactListChangedEvent.next(this.contacts.slice());
+      }
+    );
+  }
+
+
+  // storeContacts() {
+  //   const contacts = this.contactService.getContacts();
+  //   this.http
+  //     .put(
+  //       'https://ng-course-recipe-book-65f10.firebaseio.com/recipes.json',
+  //       contacts
+  //     )
+  //     .subscribe(response => {
+  //       console.log(response);
+  //     });
+  // }
+
 }
