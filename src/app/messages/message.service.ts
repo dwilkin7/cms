@@ -16,9 +16,13 @@ export class MessageService {
 
   constructor(private http: HttpClient) { 
     //this.messages = MOCKMESSAGES;
-    this.initMessages();
+    //this.initMessages();
   }
 
+  sortAndSend() {
+    this.messages.sort((a, b) => a.sender > b.sender ? 1 : b.sender > a.sender ? -1 : 0);
+    this.messageChangeEvent.next(this.messages.slice());
+  }
   //add message was this below:
   //addMessage(message: Message) {
     // this.messages.push(message);
@@ -26,32 +30,60 @@ export class MessageService {
   //}
 
   //add message
-  addMessage(newMessage: Message) {
-    if (!Message){
+  addMessage(message: Message) {
+    if (!message){
       return;
     }
-    this.maxMessageId++;
-    newMessage.id = this.maxMessageId.toString();
-    this.messages.push(newMessage);
+    const headers = new HttpHeaders ({'Content_Type': 'application/json'});
+    message.id = '';
+    //const strDocument = JSON.stringify(document);
 
-    this.storeMessages();
+    this.http.post<{ message: Message }>('http://localhost:3000/messages', 
+    message, {headers: headers})
+    .subscribe(
+      (responseData) => {
+        this.messages.push(responseData.message);
+        this.sortAndSend();
+      }
+    );
+
+    // this.maxMessageId++;
+    // newMessage.id = this.maxMessageId.toString();
+    // this.messages.push(newMessage);
+
+    // this.storeMessages();
   }
 
   
 
   //get messages
-  getMessages(): Message[] {
-    return this.messages.slice();
-  }
+  // getMessages(): Message[] {
+  //   return this.messages.slice();
+  // }
+  getMessages() {
+    this.http.get<{ message: string, messages: Message[]}>('http://localhost:3000/messages')
+    .subscribe(
+      (responseData) => {
+        this.messages = responseData.messages;
+        this.sortAndSend();
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+    }
 
   //get message
-  getMessage(id: string): Message {
-    for (const message of this.messages) {
-      if (message.id === id){
-        return message;
-      }
-    }
-    return null;
+  // getMessage(id: string): Message {
+  //   for (const message of this.messages) {
+  //     if (message.id === id){
+  //       return message;
+  //     }
+  //   }
+  //   return null;
+  // }
+  getMessage(id: string) {
+    return this.http.get<{ message: Message }>('http://localhost:3000/messages/' + id)
   }
 
   //getMaxId
@@ -67,33 +99,34 @@ export class MessageService {
   }
 
 //initMessage
-initMessages(){
-  this.http.get('https://cms-wdd430.firebaseio.com/messages.json')
-    .subscribe(
-      (messages: Message[]) => {
-        this.messages = messages;
-        this.maxMessageId = this.getMaxId();
-        this.messages.sort((a, b) => (a.subject > b.sender) ? 1 : ((b.sender > a.sender) ? -1 : 0));
-        this.messageChangeEvent.next(this.messages.slice());
-      },
-      (error: any) => {
-        console.log(error);
-      }
-    );
+// initMessages(){
+//   this.http.get('https://cms-wdd430.firebaseio.com/messages.json')
+//     .subscribe(
+//       (messages: Message[]) => {
+//         this.messages = messages;
+//         this.maxMessageId = this.getMaxId();
+//         this.messages.sort((a, b) => (a.subject > b.sender) ? 1 : ((b.sender > a.sender) ? -1 : 0));
+//         this.messageChangeEvent.next(this.messages.slice());
+//       },
+//       (error: any) => {
+//         console.log(error);
+//       }
+//     );
 
-}
+// }
 
 //store messages
 storeMessages() {
   let messages = JSON.stringify(this.messages);
   const headers = new HttpHeaders({'Content-Type': 'application/json'});
-  this.http.put('https://cms-wdd430.firebaseio.com/messages.json', messages, { headers: headers })
+  this.http.put('http://localhost:3000/messages/', messages, { headers: headers })
   .subscribe(
     () => {
       this.messageChangeEvent.next(this.messages.slice());
     }
   );
 }
+
 
 //save message *Probably don't need this because the storeMessage basically does it for us
 // saveMessage(message: Message) {

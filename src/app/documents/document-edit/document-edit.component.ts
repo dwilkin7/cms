@@ -34,7 +34,7 @@ documents: Document[] = [];
       return;
     }
 
-    this.originalDocument = this.documentService.getDocument(this.id);
+    this.documentService.getDocument(this.id);
 
      if (this.originalDocument === null){
          return;
@@ -42,8 +42,22 @@ documents: Document[] = [];
         this.editMode = true;
         this.document = JSON.parse(JSON.stringify(this.originalDocument));
         console.log(JSON.parse(JSON.stringify(this.originalDocument)));
+        // this.originalDocument = this.documentService.documents;
   })
 }
+
+// ngOnInit(): void {
+//   this.route.params
+//   .subscribe(
+//     (params: Params) => {
+//       this.id = params['id'];
+//       this.contactService.getContact(this.id)
+//         .subscribe(contactData => {
+//           this.contact = contactData.contact;
+//         });
+//     }
+//   );
+// }
 
   onSubmit(form: NgForm) {
     // const value = form.value;

@@ -35,7 +35,7 @@ id: string;
     return;
   }
 
-  this.originalContact = this.contactService.getContact(this.id);
+  this.contactService.getContact(this.id);
 
    if (this.originalContact === null){
        return;
@@ -46,8 +46,23 @@ id: string;
    if (this.originalContact.group) {
      this.groupContacts = JSON.parse(JSON.stringify(this.originalContact.group));
    }
-  })
+   //this.originalContact = 
+  });
 }
+
+
+// ngOnInit(): void {
+//   this.route.params
+//   .subscribe(
+//     (params: Params) => {
+//       this.id = params['id'];
+//       this.contactService.getContact(this.id)
+//         .subscribe(contactData => {
+//           this.contact = contactData.contact;
+//         });
+//     }
+//   );
+// }
 
 //Close the form
 onCancel(){

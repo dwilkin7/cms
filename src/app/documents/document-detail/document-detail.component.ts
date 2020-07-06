@@ -24,16 +24,30 @@ id: string;
       this.windowRefService.getNativeWindow();
     }
 
-  ngOnInit() {
+  // ngOnInit() {
+  //   this.route.params
+  //   .subscribe(
+  //     (params: Params) => {
+  //       this.id = params['id'];
+  //       this.document = this.documentService.getDocument(this.id);
+  //     }
+  //   );
+  //   this.nativeWindow = this.windowRefService.getNativeWindow();
+  // }
+
+  ngOnInit(): void {
     this.route.params
     .subscribe(
       (params: Params) => {
         this.id = params['id'];
-        this.document = this.documentService.getDocument(this.id);
+        this.documentService.getDocument(this.id)
+          .subscribe(contactData => {
+            this.document = contactData.document;
+          });
       }
     );
-    this.nativeWindow = this.windowRefService.getNativeWindow();
   }
+
   // onAddDocument() {
   //   this.documentService.addDocument(this.document.);
   // }
