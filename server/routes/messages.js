@@ -5,6 +5,8 @@ var sequenceGenerator = require('./sequenceGenerator');
 const Message = require('../models/message');
 const { error } = require('protractor');
 
+
+
 function returnError(res, error) {
     res
     .status(500)
@@ -52,11 +54,17 @@ router.get('/:id', (req, res, next) => {
 router.post('/', (req, res, next) => {
     const maxMessageId = sequenceGenerator.nextId("messages");
 
-    const message = new Message({
+    // const message = new Message({
+    //     id: maxMessageId,
+    //     name: req.body.name,
+    //     description: req.body.description,
+    //     url: req.body.url
+    // });
+    const message = new Message ({
         id: maxMessageId,
-        name: req.body.name,
-        description: req.body.description,
-        url: req.body.url
+        subject: req.body.subject,
+        msgText: req.body.msgText,
+        sender: req.body.sender
     });
 
     message.save()

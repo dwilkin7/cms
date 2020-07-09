@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Contact } from './contact.model';
-import { MOCKCONTACTS } from './MOCKCONTACTS';
+//import { MOCKCONTACTS } from './MOCKCONTACTS';
 import { Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
@@ -112,7 +112,7 @@ maxContactId: number;
   //   return null;
   // }
   getContact(id: string) {
-    return this.http.get<{ message: string, contact: Contact }>('http://localhost:3000/contacts/' + id)
+    return this.http.get<{ message: string, contact: Contact }>('http://localhost:3000/contacts/' + id);
   }
 
 //addContact
@@ -174,16 +174,16 @@ this.http.delete('http://localhost:3000/contacts/' + contact.id)
   }
 
   //store contacts
-  storeContacts() {
-    let contacts = JSON.stringify(this.contacts);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    this.http.put('https://cms-wdd430.firebaseio.com/contacts.json', contacts, { headers: headers })
-    .subscribe(
-      () => {
-        this.contactListChangedEvent.next(this.contacts.slice());
-      }
-    );
-  }
+  // storeContacts() {
+  //   let contacts = JSON.stringify(this.contacts);
+  //   const headers = new HttpHeaders({'Content-Type': 'application/json'});
+  //   this.http.put('https://cms-wdd430.firebaseio.com/contacts.json', contacts, { headers: headers })
+  //   .subscribe(
+  //     () => {
+  //       this.contactListChangedEvent.next(this.contacts.slice());
+  //     }
+  //   );
+  // }
 
 
   // storeContacts() {

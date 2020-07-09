@@ -25,10 +25,13 @@ id: string;
               private router: Router,
               private route: ActivatedRoute) { }
 
+
+/****************New Code that allows you to save changes to database but does not autopopulate fields********************/
   ngOnInit() {
     this.route.params.subscribe ((params: Params) => {
 
       this.id = params.id;
+        //this.id = params['id'];
 
   if (this.id === null || this.id === undefined) {
       this.editMode = false;
@@ -36,6 +39,11 @@ id: string;
   }
 
   this.contactService.getContact(this.id);
+
+  // .subscribe(contactData => {
+  //   this.contact = contactData.contact;
+  
+
 
    if (this.originalContact === null){
        return;
@@ -47,10 +55,12 @@ id: string;
      this.groupContacts = JSON.parse(JSON.stringify(this.originalContact.group));
    }
    //this.originalContact = 
+ 
   });
-}
+//});
+  }
 
-
+/*************This autopopulates fields but does not allow you to save to database. Original code.**************/
 // ngOnInit(): void {
 //   this.route.params
 //   .subscribe(

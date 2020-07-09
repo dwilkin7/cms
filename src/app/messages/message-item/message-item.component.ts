@@ -15,6 +15,7 @@ export class MessageItemComponent implements OnInit {
   @Input() message: Message;
   messageSender: string;
   canEdit: boolean = false;
+  
 
   constructor(private contactService: ContactService) { }
 
@@ -22,8 +23,9 @@ export class MessageItemComponent implements OnInit {
     //let contact: Contact = this.contactService.getContact(this.message.sender);
     //this.messageSender = contact.name;
 
-    this.contactService.getContact(this.message.sender)
+    this.contactService.getContact(this.message.sender.id)
     .subscribe(contactData => {
+      console.log(contactData);
       this.messageSender = contactData.contact.name;
     })
   }

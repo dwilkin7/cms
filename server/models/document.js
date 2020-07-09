@@ -6,7 +6,7 @@ var documentSchema = new Schema({
     name: {type: String},
     description: {type: String, required: true},
     url: {type: String},
-    // sender: {type: Schema.Types.ObjectId, ref: 'Document'}
+    children: [{type: mongoose.Schema.Types.ObjectId, ref: 'Document'}]
 
 });
 
