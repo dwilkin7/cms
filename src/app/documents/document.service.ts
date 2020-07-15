@@ -44,7 +44,7 @@ export class DocumentService {
     }
 
 
-    const headers = new HttpHeaders ({'Content_Type': 'application/json'});
+    const headers = new HttpHeaders ({'Content-Type': 'application/json'});
     document.id = '';
     //const strDocument = JSON.stringify(document);
 

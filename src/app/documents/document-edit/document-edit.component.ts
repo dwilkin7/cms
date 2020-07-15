@@ -40,9 +40,11 @@ documents: Document[] = [];
          return;
     }
         this.editMode = true;
+       //this.document = JSON.parse(JSON.stringify(this.originalDocument));
+        //this.originalDocument = JSON.parse(JSON.stringify(this.documents));
         this.document = JSON.parse(JSON.stringify(this.originalDocument));
         console.log(JSON.parse(JSON.stringify(this.originalDocument)));
-        // this.originalDocument = this.documentService.documents;
+        
   })
 }
 

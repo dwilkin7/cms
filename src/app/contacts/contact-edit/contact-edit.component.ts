@@ -27,24 +27,22 @@ id: string;
 
 
 /****************New Code that allows you to save changes to database but does not autopopulate fields********************/
-  ngOnInit() {
-    this.route.params.subscribe ((params: Params) => {
-
-      this.id = params.id;
-        //this.id = params['id'];
-
+  ngOnInit(): void {
+    this.route.params
+    .subscribe (
+      (params: Params) => {
+      //this.id = params.id;
+        this.id = params['id'];
   if (this.id === null || this.id === undefined) {
       this.editMode = false;
     return;
   }
-
-  this.contactService.getContact(this.id);
-
+  this.contactService.getContact(this.id)
+  .subscribe(contactData => {
+    this.contact = contactData.contact;}
+    );
   // .subscribe(contactData => {
   //   this.contact = contactData.contact;
-  
-
-
    if (this.originalContact === null){
        return;
   }
@@ -56,6 +54,7 @@ id: string;
    }
    //this.originalContact = 
  
+   
   });
 //});
   }

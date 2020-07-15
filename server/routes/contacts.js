@@ -56,7 +56,9 @@ router.post('/', (req, res, next) => {
         name: req.body.name,
         email: req.body.email,
         phone: req.body.phone,
-        imageUrl: req.body.imageUrl
+        imageUrl: req.body.imageUrl,
+        //Added group = req.body.group
+        group: req.body.group
     });
 
     contact.save()

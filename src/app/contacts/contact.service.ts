@@ -121,7 +121,7 @@ addContact(contact: Contact){
     return;
   }
 
-  const headers = new HttpHeaders ({'Content_Type': 'application/json'});
+  const headers = new HttpHeaders ({'Content-Type': 'application/json'});
     contact.id = '';
     //const strDocument = JSON.stringify(document);
 
@@ -129,7 +129,10 @@ addContact(contact: Contact){
     contact, {headers: headers})
     .subscribe(
       (responseData) => {
-        this.contacts.push(responseData.contact);
+        //this.contacts.push(responseData.contact);
+        contact.id = responseData.contact.id;
+        this.contacts.push(contact);
+
         this.sortAndSend();
       }
     );

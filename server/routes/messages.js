@@ -19,7 +19,7 @@ function returnError(res, error) {
 router.get('/', (req, res, next) => {
     Message.find()
     //
-    .populate('group')
+    .populate('sender')
     .then(messages => {
         res
         .status(200)
@@ -38,7 +38,7 @@ router.get('/:id', (req, res, next) => {
     Message.findOne({
         "id": req.params.id
     })
-    .populate('group')
+    .populate('sender')
     .then(message => {
         res.status(200).json({
             message: 'Message fetched successfully!',

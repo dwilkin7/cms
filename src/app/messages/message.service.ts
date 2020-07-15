@@ -34,7 +34,7 @@ export class MessageService {
     if (!message){
       return;
     }
-    const headers = new HttpHeaders ({'Content_Type': 'application/json'});
+    const headers = new HttpHeaders ({'Content-Type': 'application/json'});
     message.id = '';
     //const strDocument = JSON.stringify(document);
 
@@ -42,7 +42,9 @@ export class MessageService {
     message, {headers: headers})
     .subscribe(
       (responseData) => {
-        this.messages.push(responseData.message);
+        //message._id = responseData.message._id;
+        message.id = responseData.message.id;
+        this.messages.push(message);
         this.sortAndSend();
       }
     );
