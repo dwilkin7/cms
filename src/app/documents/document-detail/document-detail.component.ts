@@ -41,11 +41,12 @@ id: string;
       (params: Params) => {
         this.id = params['id'];
         this.documentService.getDocument(this.id)
-          .subscribe(contactData => {
-            this.document = contactData.document;
+          .subscribe(documentData => {
+            this.document = documentData.document;
           });
       }
     );
+    this.nativeWindow = this.windowRefService.getNativeWindow();
   }
 
   // onAddDocument() {

@@ -16,7 +16,7 @@ function returnError(res, error) {
 
 router.get('/', (req, res, next) => {
     Contact.find()
-    .populate('group')
+    
     .then(contacts => {
         res
         .status(200)
@@ -35,7 +35,7 @@ router.get('/:id', (req, res, next) => {
     Contact.findOne({
         "id": req.params.id
     })
-    .populate('group')
+    
     .then(contact => {
         res.status(200).json({
             message: 'Contact fetched successfully!',

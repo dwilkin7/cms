@@ -13,59 +13,53 @@ import { Document } from '../document.model';
 })
 export class DocumentEditComponent implements OnInit {
 
-originalDocument: Document;
-document: Document;
-editMode: boolean = false;
+  originalDocument: Document;
+  document: Document;
+  editMode: boolean = false;
 
-documents: Document[] = [];
+  documents: Document[] = [];
   id: string;
 
   constructor(private documentService: DocumentService,
-              private router: Router,
-              private route: ActivatedRoute) { }
+    private router: Router,
+    private route: ActivatedRoute) { }
+
+
 
   ngOnInit() {
-    this.route.params.subscribe ((params: Params) => {
+    this.route.params
+      .subscribe(
+        (params: Params) => {
 
-        this.id = params.id;
+          this.id = params.id;
 
-    if (this.id === null || this.id === undefined) {
-        this.editMode = false;
-      return;
-    }
+          if (!this.id) {
+            this.editMode = false;
+            return;
+          }
 
-    this.documentService.getDocument(this.id);
+          this.documentService.getDocument(this.id)
+            .subscribe(documentData => {
+              this.originalDocument = documentData.document;
+              if (!this.originalDocument) {
+                return;
+              }
+              this.editMode = true;
+              //this.document = JSON.parse(JSON.stringify(this.originalDocument));
+              //this.originalDocument = JSON.parse(JSON.stringify(this.documents));
+              this.document = JSON.parse(JSON.stringify(this.originalDocument));
+              console.log(JSON.parse(JSON.stringify(this.originalDocument)));
+                }
+            );         
+        });
+  }
 
-     if (this.originalDocument === null){
-         return;
-    }
-        this.editMode = true;
-       //this.document = JSON.parse(JSON.stringify(this.originalDocument));
-        //this.originalDocument = JSON.parse(JSON.stringify(this.documents));
-        this.document = JSON.parse(JSON.stringify(this.originalDocument));
-        console.log(JSON.parse(JSON.stringify(this.originalDocument)));
-        
-  })
-}
-
-// ngOnInit(): void {
-//   this.route.params
-//   .subscribe(
-//     (params: Params) => {
-//       this.id = params['id'];
-//       this.contactService.getContact(this.id)
-//         .subscribe(contactData => {
-//           this.contact = contactData.contact;
-//         });
-//     }
-//   );
-// }
 
   onSubmit(form: NgForm) {
     // const value = form.value;
     // const newDocument = new Document(value.id, value.name, value.description, value.url, value.children);
     let newDocument = new Document(this.id, form.value['name'], form.value['description'], form.value['url'], null);
-    if (this.editMode){
+    if (this.editMode) {
       this.documentService.updateDocument(this.originalDocument, newDocument);
     }
     else {
@@ -75,9 +69,9 @@ documents: Document[] = [];
     console.log(form);
   }
 
-onCancel() {
-  this.router.navigateByUrl('/documents');
-}
+  onCancel() {
+    this.router.navigateByUrl('/documents');
+  }
   // getDocument(id: string): Document {
   //   for (const document of this.documents){
   //     if (document.id === id){
@@ -89,15 +83,15 @@ onCancel() {
 
 
 
-// )
-// ngOnInit() {
-//   this.route.params
-//   .subscribe(
-//     (params: Params) => {
-//       this.id = params['id'];
-//       this.document = this.documentService.getDocument(this.id);
-//     }
-//   );
-//   this.nativeWindow = this.windowRefService.getNativeWindow();
-// }
+  // )
+  // ngOnInit() {
+  //   this.route.params
+  //   .subscribe(
+  //     (params: Params) => {
+  //       this.id = params['id'];
+  //       this.document = this.documentService.getDocument(this.id);
+  //     }
+  //   );
+  //   this.nativeWindow = this.windowRefService.getNativeWindow();
+  // }
 }

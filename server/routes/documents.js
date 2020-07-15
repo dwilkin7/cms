@@ -17,7 +17,6 @@ function returnError(res, error) {
 router.get('/', (req, res, next) => {
     Document.find()
     //
-    .populate('group')
     .then(documents => {
         res
         .status(200)
@@ -36,7 +35,6 @@ router.get('/:id', (req, res, next) => {
     Document.findOne({
         "id": req.params.id
     })
-    .populate('group')
     .then(document => {
         res.status(200).json({
             message: 'Document fetched successfully!',

@@ -11,87 +11,68 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
   styleUrls: ['./contact-edit.component.css']
 })
 export class ContactEditComponent implements OnInit {
-//contact: Contact = null;
-contact: Contact;
-groupContacts: Contact[] = [];
-editMode: boolean = false;
-//hasGroup: boolean = false;
-//Cancel: boolean;
-originalContact: Contact;
-id: string;
+  //contact: Contact = null;
+  contact: Contact;
+  groupContacts: Contact[] = [];
+  editMode: boolean = false;
+  //hasGroup: boolean = false;
+  //Cancel: boolean;
+  originalContact: Contact;
+  id: string;
 
 
   constructor(private contactService: ContactService,
-              private router: Router,
-              private route: ActivatedRoute) { }
+    private router: Router,
+    private route: ActivatedRoute) { }
 
 
-/****************New Code that allows you to save changes to database but does not autopopulate fields********************/
+  /****************New Code that allows you to save changes to database********************/
   ngOnInit(): void {
     this.route.params
-    .subscribe (
-      (params: Params) => {
-      //this.id = params.id;
-        this.id = params['id'];
-  if (this.id === null || this.id === undefined) {
-      this.editMode = false;
-    return;
+      .subscribe(
+        (params: Params) => {
+          this.id = params.id;
+          if (!this.id) {
+            this.editMode = false;
+            return;
+          }
+
+          this.contactService.getContact(this.id)
+            .subscribe(contactData => {
+              this.originalContact = contactData.contact;
+              if (!this.originalContact) {
+                return;
+              }
+
+              this.editMode = true;
+              this.contact = JSON.parse(JSON.stringify(this.originalContact));
+              // if (this.originalContact.group) {
+              //   this.groupContacts = JSON.parse(JSON.stringify(this.originalContact.group));
+              // }
+            }
+            );
+        });
   }
-  this.contactService.getContact(this.id)
-  .subscribe(contactData => {
-    this.contact = contactData.contact;}
+
+  //Close the form
+  onCancel() {
+    this.router.navigateByUrl('/contacts');
+  }
+
+  //Submit the form
+  onSubmit(form: NgForm) {
+    const value = form.value;
+    const newContact = new Contact(
+      //'',
+      value.id,
+      value.name,
+      value.email,
+      value.phone,
+      value.imageUrl,
+      this.groupContacts
     );
-  // .subscribe(contactData => {
-  //   this.contact = contactData.contact;
-   if (this.originalContact === null){
-       return;
-  }
-      this.editMode = true;
-      this.contact = JSON.parse(JSON.stringify(this.originalContact));
-      //console.log(JSON.parse(JSON.stringify(this.originalContact)));
-   if (this.originalContact.group) {
-     this.groupContacts = JSON.parse(JSON.stringify(this.originalContact.group));
-   }
-   //this.originalContact = 
- 
-   
-  });
-//});
-  }
-
-/*************This autopopulates fields but does not allow you to save to database. Original code.**************/
-// ngOnInit(): void {
-//   this.route.params
-//   .subscribe(
-//     (params: Params) => {
-//       this.id = params['id'];
-//       this.contactService.getContact(this.id)
-//         .subscribe(contactData => {
-//           this.contact = contactData.contact;
-//         });
-//     }
-//   );
-// }
-
-//Close the form
-onCancel(){
-  this.router.navigateByUrl('/contacts');
-}
-
-//Submit the form
-onSubmit(form: NgForm) {
-  const value = form.value;
-  const newContact = new Contact(
-    //'',
-    value.id,
-    value.name,
-    value.email,
-    value.phone,
-    value.imageUrl,
-    this.groupContacts
-  );
     //let newContact = new Contact(this.id, form.value['name'], form.value['email'], form.value['phone'], form.value['imageUrl'], null);
-    if (this.editMode){
+    if (this.editMode) {
       this.contactService.updateContact(this.originalContact, newContact);
     }
     else {
@@ -117,29 +98,29 @@ onSubmit(form: NgForm) {
     return false;
   }
 
-addToGroup($event: any) {
-  let selectedContact: Contact = $event.dragData;
-  const invalidGroupContact = this.isInvalidContact(selectedContact);
+  addToGroup($event: any) {
+    let selectedContact: Contact = $event.dragData;
+    const invalidGroupContact = this.isInvalidContact(selectedContact);
 
-  if (invalidGroupContact) {
-    return;
+    if (invalidGroupContact) {
+      return;
+    }
+    this.groupContacts.push(selectedContact);
+    //this.invalidGroupContact = false;
   }
-  this.groupContacts.push(selectedContact);
-  //this.invalidGroupContact = false;
-}
 
-onRemoveItem(index: number) {
-  if (index < 0 || index >= this.groupContacts.length) {
-    return;
+  onRemoveItem(index: number) {
+    if (index < 0 || index >= this.groupContacts.length) {
+      return;
+    }
+    this.groupContacts.splice(index, 1);
   }
-  this.groupContacts.splice(index, 1);
-}
-// onRemoveItem(idx: number) {
-//   if (idx < 0 || idx >= this.groupContacts.length)
-//   return;
+  // onRemoveItem(idx: number) {
+  //   if (idx < 0 || idx >= this.groupContacts.length)
+  //   return;
 
-//   this.groupContacts.splice(idx, 1);
-//   this.invalidGroupContact = false;
-// }
+  //   this.groupContacts.splice(idx, 1);
+  //   this.invalidGroupContact = false;
+  // }
 
 }
