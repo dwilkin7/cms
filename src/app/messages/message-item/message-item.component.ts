@@ -22,12 +22,12 @@ export class MessageItemComponent implements OnInit {
   ngOnInit() {
     //let contact: Contact = this.contactService.getContact(this.message.sender);
     this.messageSender = Contact.name;
+console.log(this.messageSender);
 
     this.contactService.getContact(this.message.sender.id)
     .subscribe(contactData => {
-      console.log(contactData);
       this.messageSender = contactData.contact.name;
-    })
+    });
   }
 
 }

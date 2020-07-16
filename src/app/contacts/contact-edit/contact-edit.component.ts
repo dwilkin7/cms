@@ -46,9 +46,10 @@ export class ContactEditComponent implements OnInit {
 
               this.editMode = true;
               this.contact = JSON.parse(JSON.stringify(this.originalContact));
-              // if (this.originalContact.group) {
-              //   this.groupContacts = JSON.parse(JSON.stringify(this.originalContact.group));
-              // }
+              if (this.originalContact.group) {
+                this.groupContacts = JSON.parse(JSON.stringify(this.originalContact.group));
+                console.log(this.groupContacts);
+            }
             }
             );
         });
